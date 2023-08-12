@@ -8,16 +8,22 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
-app.get("/proxy", async (req, res) => {
+app.all("/proxy", async (req, res) => {
   try {
     const { url } = req.query;
     if (!url) {
       return res.status(400).json({ error: "URL parameter is required" });
     }
 
-    // Make a request to the insecure API endpoint
-    const response = await axios.get(url);
-    res.json(response.data);
+    // Proxy the request to the specified URL
+    const response = await axios({
+      method: req.method,
+      url: url,
+      data: req.body,
+      headers: req.headers,
+    });
+
+    return res.json(response.data);
   } catch (error) {
     console.error("Proxy error:", error);
     res
