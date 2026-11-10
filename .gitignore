@@ -1,3 +1,5 @@
 node_modules
 .gitignore
-config.bat
+
+.env*
+!.env.example
